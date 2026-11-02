@@ -7,6 +7,21 @@
 
 它面向横屏、无触摸的小尺寸显示设备（主要适配 5.5 英寸 1280×720），所有关键信息一屏展示、自动刷新，无需本地操作；连接参数、外观和亮度等配置都通过局域网内的 Web 页面完成。
 
+![监控屏：1280×720 实机截图](docs/screenshots/dashboard.png)
+
+<table>
+  <tr>
+    <td width="70%"><img src="docs/screenshots/web-config.png" alt="Web 配置页（桌面端）"></td>
+    <td width="30%"><img src="docs/screenshots/web-config-mobile.png" alt="Web 配置页（手机端）"></td>
+  </tr>
+  <tr>
+    <td align="center">Web 配置页 · 桌面端</td>
+    <td align="center">Web 配置页 · 手机端</td>
+  </tr>
+</table>
+
+> 截图中的公网 IP、路由器地址和用户名均已替换为示例值。
+
 ## 功能
 
 - **系统概览**：设备名称、RouterOS 版本、运行时间、CPU 温度。
