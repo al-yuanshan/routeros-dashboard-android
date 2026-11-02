@@ -1,0 +1,50 @@
+# Gradle files
+.gradle/
+build/
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Local configuration files (SDK path, credentials, etc.)
+local.properties
+.env
+
+# Keystores / Signing keys (DO NOT COMMIT SECRETS)
+*.jks
+*.keystore
+*.pk8
+*.pem
+
+# Compiled / Built artifacts
+*.apk
+*.aar
+*.ap_
+*.aab
+*.dex
+*.class
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Mobile tools & native builds
+.externalNativeBuild/
+.cxx/
+captures/
+
+# Antigravity / Gemini assistant config
+.gemini/
+
+# CodeGraph files
+.codegraph/
+
+# Agent files
+.agents/
+AGENTS.md

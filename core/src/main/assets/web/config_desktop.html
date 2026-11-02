@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{TITLE}}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #f8fafc;
+      color: #0f172a;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 320px;
+      background: #ffffff;
+      border-right: 1px solid #e2e8f0;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .app-logo {
+      width: 20px;
+      height: auto;
+      max-height: 24px;
+    }
+    .logo-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.2;
+    }
+    .logo-desc {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #475569;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+    .nav-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .nav-item.active {
+      background: #f1f5f9;
+      color: #000000;
+      font-weight: 600;
+    }
+    .device-status {
+      margin-top: auto;
+      padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+    .device-status-label {
+      margin-bottom: 8px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .battery-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #166534;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .battery-status.low { color: #b91c1c; }
+    .battery-shell {
+      display: block;
+      flex-shrink: 0;
+      width: 30px;
+      height: 14px;
+      padding: 2px;
+      border: 2px solid currentColor;
+      border-radius: 4px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .battery-shell::after {
+      content: '';
+      position: absolute;
+      right: -5px;
+      top: 3px;
+      width: 3px;
+      height: 6px;
+      border-radius: 0 2px 2px 0;
+      background: currentColor;
+    }
+    .battery-level {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: 1px;
+      background: currentColor;
+      transition: width 0.25s ease;
+    }
+    .main-content {
+      margin-left: 320px;
+      padding: 50px 60px;
+      background: #f8fafc;
+      min-height: 100vh;
+      box-sizing: border-box;
+      flex: 1;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+    }
+    .page-desc {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0 0 28px 0;
+      min-height: 20px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active {
+      display: block;
+      animation: panelIn 0.18s ease-out;
+    }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: none; }
+    }
+    .tab-panel .wallpaper-box:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .config-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+    .card-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .section-icon {
+      width: 20px;
+      height: 20px;
+      color: #000000;
+    }
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 24px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+    }
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .input-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    input, select {
+      width: 100%;
+      height: 44px;
+      box-sizing: border-box;
+      padding: 10px 14px 10px 44px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #0f172a;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: #000000;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+    }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+    .color-control {
+      width: 100%;
+      height: 44px;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 32px minmax(96px, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 6px 5px 42px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+    .color-picker, .color-hex {
+      padding: 0;
+      border: 0;
+      border-radius: 5px;
+      box-shadow: none;
+    }
+    .color-picker {
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      background: transparent;
+    }
+    .color-hex {
+      width: 100%;
+      height: 32px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+    }
+    .color-auto {
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      color: #475569;
+      background: #f8fafc;
+      cursor: pointer;
+    }
+    .action-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .btn-save {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      height: 46px;
+      padding: 0 32px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-save:hover {
+      background: #1e293b;
+    }
+    .btn-save:active {
+      transform: scale(0.98);
+    }
+    #message {
+      font-size: 14px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 24px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px #10b981;
+    }
+    .wallpaper-box {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .wallpaper-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .wallpaper-hint {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .wallpaper-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-upload {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      padding: 0 16px;
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-upload:hover {
+      background: #1e293b;
+    }
+    .btn-clear {
+      height: 38px;
+      padding: 0 14px;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .wallpaper-preview-wrap {
+      margin-top: 14px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      max-width: 360px;
+      aspect-ratio: 16 / 9;
+      background: #0f172a;
+    }
+    .wallpaper-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="brand-container">
+      <div class="logo-wrapper">
+        {{LOGO_SVG}}
+      </div>
+      <h1 class="logo-title">网络 Metrics</h1>
+    </div>
+    <p class="logo-desc">轻量级网络与设备监控管理端配置工具，提供便捷的实时参数及显示设置。</p>
+    <nav class="nav-list">
+      {{NAV_HTML}}
+    </nav>
+    <div class="device-status">
+      <div class="device-status-label">设备电量</div>
+      <div id="batteryStatus" class="battery-status">
+        <span class="battery-shell"><span id="batteryLevel" class="battery-level"></span></span>
+        <span id="batteryText">读取中...</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <h2 class="page-title" id="pageTitle">{{PAGE_TITLE}}</h2>
+    <p class="page-desc" id="pageDesc">{{PAGE_DESC}}</p>
+    {{SECTIONS_HTML}}
+    <div class="action-footer">
+      <div id="message"></div>
+      <button id="save" class="btn-save">保存并应用</button>
+    </div>
+  </main>
+
+  <script>
+    async function refreshDeviceStatus() {
+      try {
+        const response=await fetch('/api/status',{cache:'no-store'});
+        const status=await response.json();
+        const battery=document.getElementById('batteryStatus');
+        const level=document.getElementById('batteryLevel');
+        const text=document.getElementById('batteryText');
+        if(status.batteryAvailable) {
+          const percent=Math.max(0,Math.min(100,status.batteryPercent));
+          level.style.width=percent+'%';
+          battery.classList.toggle('low',percent<20&&!status.charging);
+          text.textContent=percent+'%'+(status.charging?' · 充电中':'');
+        } else {
+          level.style.width='0';
+          battery.classList.remove('low');
+          text.textContent='暂无电量数据';
+        }
+        syncWallpaperPreview(!!status.hasCustomWallpaper);
+      } catch(e) {
+        document.getElementById('batteryText').textContent='读取失败';
+      }
+    }
+    function syncWallpaperPreview(hasCustom) {
+      const wrap=document.getElementById('wallpaperPreviewWrap');
+      const img=document.getElementById('wallpaperPreviewImg');
+      const clearBtn=document.getElementById('clearWallpaperBtn');
+      if(!wrap||!img||!clearBtn) return;
+      if(hasCustom) {
+        img.src='/api/wallpaper?t='+Date.now();
+        wrap.style.display='block';
+        clearBtn.style.display='inline-block';
+      } else {
+        wrap.style.display='none';
+        clearBtn.style.display='none';
+      }
+    }
+    function handleWallpaperSelect(input) {
+      const file=input.files&&input.files[0];
+      if(!file) return;
+      document.getElementById('message').innerHTML='正在处理并上传背景图片...';
+      const reader=new FileReader();
+      reader.onload=function(ev) {
+        const img=new Image();
+        img.onload=async function() {
+          const maxW=1920, maxH=1080;
+          let w=img.width, h=img.height;
+          if(w>maxW||h>maxH) {
+            const r=Math.min(maxW/w, maxH/h);
+            w=Math.round(w*r);
+            h=Math.round(h*r);
+          }
+          const canvas=document.createElement('canvas');
+          canvas.width=w;
+          canvas.height=h;
+          const ctx=canvas.getContext('2d');
+          ctx.drawImage(img,0,0,w,h);
+          const dataUrl=canvas.toDataURL('image/jpeg',0.92);
+          try {
+            const res=await fetch('/api/wallpaper',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:dataUrl})});
+            const json=await res.json();
+            if(json.success) {
+              syncWallpaperPreview(true);
+              document.getElementById('message').innerHTML='<span class="dot"></span> 自定义背景已上传并生效';
+            } else {
+              document.getElementById('message').textContent=json.message||'背景上传失败';
+            }
+          } catch(err) {
+            document.getElementById('message').textContent='背景上传失败，请检查网络连接';
+          }
+          input.value='';
+        };
+        img.src=ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    async function clearCustomWallpaper() {
+      document.getElementById('message').innerHTML='正在恢复默认背景...';
+      try {
+        const res=await fetch('/api/wallpaper',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'clear'})});
+        const json=await res.json();
+        if(json.success) {
+          syncWallpaperPreview(false);
+          document.getElementById('message').innerHTML='<span class="dot"></span> 已恢复默认背景';
+        }
+      } catch(err) {
+        document.getElementById('message').textContent='操作失败';
+      }
+    }
+    // 左侧 tab 切换：所有字段始终留在页面中，“保存并应用”一次提交全部配置。
+    function switchTab(index) {
+      const panels=document.querySelectorAll('.tab-panel');
+      if(index<0||index>=panels.length) index=0;
+      panels.forEach((el,i)=>el.classList.toggle('active',i===index));
+      document.querySelectorAll('.nav-item[data-tab]').forEach((el,i)=>el.classList.toggle('active',i===index));
+      const panel=panels[index];
+      if(panel) {
+        document.getElementById('pageTitle').textContent=panel.dataset.title;
+        document.getElementById('pageDesc').textContent=panel.dataset.desc||'';
+      }
+    }
+    document.querySelectorAll('.nav-item[data-tab]').forEach(el=>{
+      el.addEventListener('click',ev=>{
+        ev.preventDefault();
+        const index=Number(el.dataset.tab);
+        history.replaceState(null,'','#tab-'+index);
+        switchTab(index);
+      });
+    });
+    // 刷新页面后停留在上次的 tab
+    const hashMatch=location.hash.match(/^#tab-(\d+)$/);
+    if(hashMatch) switchTab(Number(hashMatch[1]));
+
+    refreshDeviceStatus();
+    setInterval(refreshDeviceStatus,30000);
+
+    document.getElementById('save').onclick=async()=>{
+      const data={};
+      document.querySelectorAll('[data-key]').forEach(el=>{
+        data[el.dataset.key]=el.type==='number'?Number(el.value):el.value;
+      });
+      document.getElementById('message').innerHTML='正在保存...';
+      try {
+        const response=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+        if(response.status===401){location.reload();return;}
+        const result=await response.json();
+        if(result.success) {
+          document.getElementById('message').innerHTML='<span class="dot"></span> 配置已生效';
+        } else {
+          document.getElementById('message').textContent=result.message||'保存失败';
+        }
+      } catch(e) {
+        document.getElementById('message').textContent='保存失败，请检查网络连接';
+      }
+    };
+  </script>
+</body>
+</html>

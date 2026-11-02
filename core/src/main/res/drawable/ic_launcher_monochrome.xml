@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- Stylized Pulse 'M' logo (Monochrome) -->
+    <path
+        android:pathData="M 140,340 L 140,180 L 200,250 L 235,150 L 277,350 L 312,210 L 372,210 L 372,340"
+        android:strokeWidth="24"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeColor="#FFFFFF"
+        android:fillColor="#00000000" />
+
+    <!-- Single accent dot (Monochrome) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 372,180 m -12,0 a 12,12 0 1,1 24,0 a 12,12 0 1,1 -24,0" />
+</vector>

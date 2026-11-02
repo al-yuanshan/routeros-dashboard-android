@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>{{TITLE}}</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #cbd5e1;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, #e0f2fe 0, transparent 45%),
+        radial-gradient(circle at 85% 80%, #fef3c7 0, transparent 40%),
+        #f8fafc;
+    }
+    .card {
+      width: 100%;
+      max-width: 380px;
+      padding: 32px 28px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      box-shadow: 0 20px 45px -25px rgba(15, 23, 42, .35);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .logo-wrapper {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 8px;
+      background: #000; color: #fff; flex-shrink: 0;
+    }
+    .app-logo { width: 18px; height: auto; max-height: 20px; }
+    h1 { margin: 0; font-size: 17px; }
+    p { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    input {
+      width: 100%; height: 48px; padding: 0 14px;
+      border: 1px solid var(--line); border-radius: 8px;
+      font-size: 18px; letter-spacing: .2em; outline: none;
+    }
+    input:focus { border-color: #000; }
+    button {
+      width: 100%; height: 48px; margin-top: 14px;
+      border: 0; border-radius: 8px; background: #000; color: #fff;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    #message { min-height: 20px; margin-top: 12px; color: var(--danger); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <form class="card" id="loginForm">
+    <div class="brand">
+      <div class="logo-wrapper">{{LOGO_SVG}}</div>
+      <h1>{{TITLE}}</h1>
+    </div>
+    <p>请输入访问码。未连接 RouterOS 或 App 启动后的前 3 分钟内，访问码会显示在监控屏顶部。</p>
+    <input id="code" type="password" inputmode="numeric" autocomplete="current-password"
+           placeholder="访问码" maxlength="32" required autofocus>
+    <button id="submit" type="submit">进入配置</button>
+    <div id="message" role="alert"></div>
+  </form>
+  <script>
+    document.getElementById('loginForm').onsubmit = async (event) => {
+      event.preventDefault();
+      const button = document.getElementById('submit');
+      const message = document.getElementById('message');
+      button.disabled = true;
+      message.textContent = '';
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({code: document.getElementById('code').value})
+        });
+        const result = await response.json();
+        if (result.success) {
+          location.replace('/');
+          return;
+        }
+        message.textContent = result.message || '验证失败';
+      } catch (e) {
+        message.textContent = '请求失败，请检查网络连接';
+      }
+      button.disabled = false;
+    };
+  </script>
+</body>
+</html>

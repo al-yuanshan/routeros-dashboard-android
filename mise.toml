@@ -1,0 +1,26 @@
+[tools]
+java = "17"
+
+[tasks.build]
+description = "构建 RouterOS Debug APK"
+run = "./gradlew :app-routeros:assembleDebug"
+
+[tasks.test]
+description = "运行 RouterOS JVM 单元测试"
+run = "./gradlew :app-routeros:testDebugUnitTest"
+
+[tasks.lint]
+description = "运行 Android Lint"
+run = "./gradlew lint"
+
+[tasks.check]
+description = "运行测试、Lint 并构建 Debug APK"
+run = "./gradlew :app-routeros:testDebugUnitTest lint :app-routeros:assembleDebug"
+
+[tasks.release]
+description = "构建经过 R8 和资源压缩的 Release APK"
+run = "./gradlew :app-routeros:assembleRelease"
+
+[tasks.clean]
+description = "清理 Gradle 构建产物"
+run = "./gradlew clean"
