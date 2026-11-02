@@ -12,6 +12,7 @@ out/
 # Local configuration files (SDK path, credentials, etc.)
 local.properties
 .env
+keystore.properties
 
 # Keystores / Signing keys (DO NOT COMMIT SECRETS)
 *.jks

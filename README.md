@@ -30,14 +30,14 @@
 ## 快速开始
 
 1. **在 RouterOS 上创建只读账号**（见下方 [RouterOS 侧建议](#routeros-侧建议)）。
-2. **构建并安装 APK**：
+2. **安装 APK**：从 [Releases](https://github.com/al-yuanshan/routeros-dashboard-android/releases) 下载最新的 `routeros-dashboard-v*.apk` 安装；也可以自行构建：
 
    ```shell
    ./gradlew :app-routeros:assembleDebug
    adb install -r app-routeros/build/outputs/apk/debug/app-routeros-debug.apk
    ```
 
-   也可以从 GitHub Actions 的构建产物中下载 Debug APK。
+   Release 与 Debug 的签名不同，两者不能互相覆盖安装，切换时需先卸载（会清空配置）。
 3. **打开 App**，记下监控屏顶部显示的 6 位访问码。
 4. **在浏览器访问** `http://<设备 IP>:8081`，输入访问码，填写 RouterOS 地址、端口、用户名和密码后保存。
 5. 如需开机自动显示，参考 [开机自启](#开机自启)。
@@ -63,7 +63,27 @@ mise run clean      # 清理构建产物
 
 不使用 mise 时，在 JDK 17 环境下直接调用 Gradle Wrapper 即可，例如 `./gradlew :app-routeros:assembleDebug`。
 
-Release 构建默认启用 R8 和资源压缩，但未配置发布签名。Debug APK 使用 Android Debug 签名，可直接安装测试。
+Release 构建默认启用 R8 和资源压缩。Debug APK 使用 Android Debug 签名，可直接安装测试。
+
+### 发布
+
+推送 `v` 开头的语义化版本 tag 后，`Release` 工作流会构建签名 APK 并发布到 GitHub Releases，带 `-` 的 tag（如 `v1.1.0-beta.1`）会标记为预发布：
+
+```shell
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+`versionName` 取自 tag，`versionCode` 按 `major×10000 + minor×100 + patch` 计算。工作流需要在仓库 Secrets 中配置 `RELEASE_KEYSTORE_BASE64`、`RELEASE_KEYSTORE_PASSWORD`、`RELEASE_KEY_ALIAS`、`RELEASE_KEY_PASSWORD`。
+
+本地构建签名 Release 时，在项目根目录创建 `keystore.properties`（已被 Git 忽略）：
+
+```properties
+storeFile=/path/to/release.jks
+storePassword=...
+keyAlias=...
+keyPassword=...
+```
 
 ## 项目结构
 
