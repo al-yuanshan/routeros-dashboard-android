@@ -21,6 +21,7 @@ keystore.properties
 *.pem
 
 # Compiled / Built artifacts
+app-routeros/release/
 *.apk
 *.aar
 *.ap_
